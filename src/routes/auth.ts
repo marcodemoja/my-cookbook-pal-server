@@ -30,7 +30,7 @@ authRoutes.post("/verify", async (req: Request, res: Response) => {
     res.status(200).header("x-auth-token", token).json({ user });
   } catch (err) {
     console.log("ERROR @ POST /auth/verify", err);
-    res.status(400).send("Unauthorized");
+    res.status(401).send("Unauthorized");
   }
 });
 
