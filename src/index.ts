@@ -6,7 +6,10 @@ import routes from "./routes";
 import { authMiddleware } from "./middlewares/authMiddleware";
 const { PORT } = process.env;
 const app: Express = express();
-
+const corsOption = {
+  allowedHeaders: ['x-auth-token', 'content-type'],
+  exposedHeaders: ['x-auth-token', 'content-type']
+}
 connection
   .asPromise()
   .then(() => {
@@ -14,7 +17,7 @@ connection
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
     //middlewares
-    app.use([express.json(), express.urlencoded({ extended: false }), cors()]);
+    app.use([express.json(), express.urlencoded({ extended: false }), cors(corsOption)]);
     //routes
     app.use("/auth", routes.auth);
     app.use("/food", authMiddleware, routes.food);
