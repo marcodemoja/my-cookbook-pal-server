@@ -7,8 +7,8 @@ import { authMiddleware } from "./middlewares/authMiddleware";
 const { PORT } = process.env;
 const app: Express = express();
 const corsOption = {
-  allowedHeaders: ['x-auth-token', 'content-type'],
-  exposedHeaders: ['x-auth-token', 'content-type']
+  allowedHeaders: ['x-auth-token', 'content-type', 'Authorization'],
+  exposedHeaders: ['x-auth-token', 'content-type', 'Authorization']
 }
 connection
   .asPromise()
