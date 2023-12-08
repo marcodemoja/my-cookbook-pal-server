@@ -19,7 +19,7 @@ authRoutes.post("/login", async (req: Request, res: Response) => {
     res.status(200).header("x-auth-token", token).json({ user });
   } catch (err) {
     console.log("ERROR @ POST /auth/login", err);
-    res.status(400).send("Unauthorized");
+    res.status(401).send("Unauthorized");
   }
 });
 
@@ -41,7 +41,7 @@ authRoutes.post("/signup", async (req: Request, res: Response, next) => {
     res.status(201).json(signup);
   } catch (err) {
     console.log("ERROR @ POST /auth/signup", err);
-    res.status(400).send("Unauthorized");
+    res.status(401).send("Unauthorized");
   }
 });
 
