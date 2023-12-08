@@ -1,4 +1,4 @@
-import authRoutes from "./authentication";
+import authRoutes from "./auth";
 import foodRoutes from "./food";
 import recipeRoutes from "./recipe";
 
