@@ -30,9 +30,8 @@ authRoutes.post("/signup", async (req: Request, res: Response, next) => {
     let { name, email, password } = req.body;
     const result = await AuthController.signUp(name, email, password);
     res.status(201).json(result);
-  } catch (err) {
-    console.log("ERROR @ POST /auth/signup", err);
-    res.status(401).send("Unauthorized");
+  } catch (error) {
+    handleResponseError(res, error);
   }
 });
 
