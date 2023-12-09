@@ -45,4 +45,14 @@ foodRoutes.get("/search/:searchTerm", async (req: Request, res: Response) => {
   }
 });
 
+foodRoutes.get("/nutrients/:foodName", async (req: Request, res: Response) => {
+  try {
+    const { foodName } = req.params;
+    const result = await NutritionXController.getNutrients(foodName);
+    res.status(200).json(result);
+  } catch (error) {
+    handleResponseError(res, error);
+  }
+});
+
 export default foodRoutes;

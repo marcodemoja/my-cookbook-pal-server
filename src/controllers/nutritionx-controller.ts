@@ -1,6 +1,5 @@
 import {} from "dotenv/config";
 import axios from "axios";
-import { UNEXPECTED_ERROR } from "../Errors";
 const { NUTRITIONX_BASE_URL, NUTRITIONX_API_KEY, NUTRITIONX_APP_ID } =
   process.env;
 const HEADERS = {
@@ -27,9 +26,7 @@ const searchFood = async (searchTerm: string) => {
 const getNutrients = async (foodName: string) => {
   return axios(`${NUTRITIONX_BASE_URL}/natural/nutrients`, {
     method: "POST",
-    params: {
-      query: foodName,
-    },
+    data: { query: foodName },
     headers: HEADERS,
   })
     .then((response) => response.data)
