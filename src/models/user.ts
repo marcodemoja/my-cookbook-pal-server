@@ -26,22 +26,6 @@ const UserSchema = new Schema<IUser, UserModel>({
   },
 });
 
-UserSchema.static("login", async function (email, password) {
-  const user = await this.findOne({ email });
-  if (user) {
-    const auth = await bcrypt.compare(password, user.password);
-    if (auth) {
-      return user;
-    }
-  }
-  throw new Error("Authentication failed.");
-});
-
-UserSchema.static("emailExists", async function (email) {
-  const exists = await this.findOne({ email });
-  return exists !== null;
-});
-
 UserSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
