@@ -37,38 +37,6 @@ const ENDPOINT_SCHEMAS: any = {
     })
       .options({ abortEarly: false })
       .validate(req.params),
-  "GET /food/nutrients/:foodName": (req: Request) =>
-    Joi.object({
-      foodName: Joi.string().required(),
-    })
-      .options({ abortEarly: false })
-      .validate(req.params),
-  "POST /food/create": (req: Request) =>
-    Joi.object({
-      foodName: Joi.string().required(),
-    })
-      .options({ abortEarly: false })
-      .validate(req.body),
-  "PUT /food/update/:foodId": (req: Request) =>
-    Joi.object({
-      foodId: Joi.string().required(),
-      food_name: Joi.string().required(),
-      serving_quantity: Joi.number().required(),
-      serving_unit: Joi.string().required(),
-      serving_weight_grams: Joi.number().required(),
-      calories: Joi.number().required(),
-      total_fat: Joi.number().required(),
-      saturated_fat: Joi.number().required(),
-      cholesterol: Joi.number().required(),
-      sodium: Joi.number().required(),
-      total_carbohydrate: Joi.number().required(),
-      dietary_fiber: Joi.number().required(),
-      sugars: Joi.number().required(),
-      protein: Joi.number().required(),
-      potassium: Joi.number().required(),
-    })
-      .options({ abortEarly: false })
-      .validate({ ...req.body, ...req.params }),
   "POST /recipe/create": (req: Request) =>
     Joi.object({
       name: Joi.string().required(),
