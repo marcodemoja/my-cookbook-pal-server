@@ -15,6 +15,7 @@ const ENDPOINT_SCHEMAS: any = {
     Joi.object({
       email: Joi.string().email().required(),
       password: Joi.string().required(),
+      name: Joi.string().required(),
     })
       .options({ abortEarly: false })
       .validate(req.body),

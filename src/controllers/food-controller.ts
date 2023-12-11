@@ -4,23 +4,51 @@ import * as NutritionXController from "./nutritionx-controller";
 
 const create = async (food: any) => {
   try {
-    let result;
-    const stored = await FoodModel.findOne({
-      food_name: food.food_name,
-    });
-    if (stored !== null) {
-      result = stored;
-    } else {
-      const newFood = await new FoodModel(food).save();
-      result = newFood;
-    }
+    const result = await new FoodModel(food).save();
     return result;
   } catch (error) {
     throw error;
   }
 };
 
-const createByName = async (foodName: string) => {
+// const createByName = async (foodName: string) => {
+//   try {
+//     let result;
+//     const stored = await FoodModel.findOne({
+//       food_name: foodName,
+//     });
+//     if (stored !== null) {
+//       result = stored;
+//     } else {
+//       const nutritionXResult = await NutritionXController.getNutrients(
+//         foodName
+//       );
+//       const nutritionXFood: any = nutritionXResult.foods[0];
+//       const newFood = {
+//         food_name: foodName,
+//         serving_qty: nutritionXFood.serving_qty,
+//         serving_unit: nutritionXFood.serving_unit,
+//         serving_weight_grams: nutritionXFood.serving_weight_grams,
+//         calories: nutritionXFood.nf_calories,
+//         total_fat: nutritionXFood.nf_total_fat,
+//         saturated_fat: nutritionXFood.nf_saturated_fat,
+//         cholesterol: nutritionXFood.nf_cholesterol,
+//         sodium: nutritionXFood.nf_sodium,
+//         total_carbohydrate: nutritionXFood.nf_total_carbohydrate,
+//         dietary_fiber: nutritionXFood.nf_dietary_fiber,
+//         sugars: nutritionXFood.nf_sugars,
+//         protein: nutritionXFood.nf_protein,
+//         potassium: nutritionXFood.nf_potassium,
+//       };
+//       result = await new FoodModel(newFood).save();
+//     }
+//     return result;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+const findByName = async (foodName: string) => {
   try {
     let result;
     const stored = await FoodModel.findOne({
@@ -49,19 +77,7 @@ const createByName = async (foodName: string) => {
         protein: nutritionXFood.nf_protein,
         potassium: nutritionXFood.nf_potassium,
       };
-      result = await new FoodModel(newFood).save();
-    }
-    return result;
-  } catch (error) {
-    throw error;
-  }
-};
-
-const findByName = async (foodName: string) => {
-  try {
-    const result = await FoodModel.findOne({ food_name: foodName });
-    if (!result) {
-      throw FOOD_NOT_FOUND;
+      result = await create(newFood);
     }
     return result;
   } catch (error) {
@@ -81,4 +97,4 @@ const update = async (foodId: string, changes: any) => {
   }
 };
 
-export { create, createByName, findByName, update };
+export { create, findByName, update };

@@ -5,20 +5,20 @@ import { handleResponseError } from "../Errors";
 import { validateRequestMiddleware } from "../middlewares";
 const foodRoutes = express.Router();
 
-foodRoutes.post(
-  "/create",
-  validateRequestMiddleware("/create"),
-  async (req: Request, res: Response) => {
-    try {
-      const { foodName } = req.body;
-      const result = await FoodController.createByName(foodName);
+// foodRoutes.post(
+//   "/create",
+//   validateRequestMiddleware("/create"),
+//   async (req: Request, res: Response) => {
+//     try {
+//       const { foodName } = req.body;
+//       const result = await FoodController.createByName(foodName);
 
-      return res.status(200).json(result);
-    } catch (error) {
-      handleResponseError(res, error);
-    }
-  }
-);
+//       return res.status(200).json(result);
+//     } catch (error) {
+//       handleResponseError(res, error);
+//     }
+//   }
+// );
 
 foodRoutes.put(
   "/update/:foodId",
