@@ -1,5 +1,6 @@
 import {} from "dotenv/config";
 import axios from "axios";
+import { StatusError } from "../Errors";
 const { NUTRITIONX_BASE_URL, NUTRITIONX_API_KEY, NUTRITIONX_APP_ID } =
   process.env;
 const HEADERS = {
@@ -19,7 +20,7 @@ const searchFood = async (searchTerm: string) => {
   })
     .then((response) => response.data)
     .catch((error) => {
-      throw error;
+      throw new StatusError(error.response.status, error.response.data.message);
     });
 };
 
@@ -31,7 +32,7 @@ const getNutrients = async (foodName: string) => {
   })
     .then((response) => response.data)
     .catch((error) => {
-      throw error;
+      throw new StatusError(error.response.status, error.response.data.message);
     });
 };
 
