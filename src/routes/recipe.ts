@@ -1,77 +1,79 @@
-import express, { Request, Response, ErrorRequestHandler } from 'express';
-import { RecipeModel } from '../models/recipe';
-
+import express, { Request, Response } from "express";
+import { RecipeModel } from "../models/recipe";
+import { validateRequestMiddleware } from "../middlewares";
 const recipeRoutes = express.Router();
 
-recipeRoutes.post('/', async (req: Request, res: Response, next) => {
+recipeRoutes.post(
+  "/create",
+  validateRequestMiddleware("/recipe/create"),
+  async (req: Request, res: Response) => {
     try {
-        const recipe = new RecipeModel(req.body);
-        await recipe.save();
-        res.status(201)
-            .json(recipe.toJSON())
-            .end()
+      const recipe = new RecipeModel(req.body);
+      await recipe.save();
+      res.status(201).json(recipe.toJSON());
     } catch (e) {
-        res.status(400)
-            .send(`Server Error: ${e}`)
-            .end();
+      res.status(400).send(`Server Error: ${e}`);
     }
-});
+  }
+);
 
-recipeRoutes.patch('/', async (req:Request, res:Response, next) => {
-    const id = req.query.id;
+recipeRoutes.put(
+  "/update/:recipeId",
+  validateRequestMiddleware("/recipe/update/:recipeId"),
+  async (req: Request, res: Response, next) => {
+    const { recipeId } = req.params;
     const changes = req.body;
-    
+
     try {
-        if(id) {
-            const record = await RecipeModel.findByIdAndUpdate(id, changes)
-            res.status(200)
-                .send(record?.toJSON())
-                .end(); 
+      if (recipeId) {
+        const record = await RecipeModel.findByIdAndUpdate(recipeId, changes);
+        res.status(200).send(record?.toJSON());
+      }
+    } catch (e) {
+      res.status(500).send(`Internal Error: ${e}`);
+    }
+  }
+);
+
+recipeRoutes.get(
+  "/find/:recipeId",
+  validateRequestMiddleware("/recipe/find/:recipeId"),
+  async (req: Request, res: Response, next) => {
+    try {
+      const { recipeId } = req.params;
+      if (recipeId) {
+        const record = await RecipeModel.findById(recipeId);
+        res.status(200).json(record?.toJSON());
+      } else {
+        next();
+      }
+    } catch (e) {
+      res.status(500).send(`Internal Error: ${e}`);
+    }
+  }
+);
+
+recipeRoutes.get(
+  "/search/:searchTerm",
+  validateRequestMiddleware("/recipe/search/:searchTerm"),
+  async (req: Request, res: Response) => {
+    try {
+      const { searchTerm } = req.params;
+      const { offset, limit } = req.query;
+      const result = await RecipeModel.find(
+        { name: new RegExp(`${searchTerm}i`) },
+        null,
+        {
+          skip: parseInt(offset as string) || 0,
+          limit: parseInt(limit as string) || 20,
         }
+      );
+
+      res.status(200).json(result);
     } catch (e) {
-        res.status(500)
-        .send(`Internal Error: ${e}`)
-        .end();
+      res.status(404).send(`Recipe not found ${e}`);
     }
-    
-});
-
-recipeRoutes.get('/', async (req: Request, res: Response, next) => {    
-    try {
-        const id = req.query.id;
-        if (id) {
-            const record = await RecipeModel.findById(id);
-            res.status(200)
-                .json(record?.toJSON())
-                .end()
-        } else {
-            next();
-        } 
-    } catch(e) {
-        res.status(500)
-            .send(`Internal Error: ${e}`)
-            .end();
-    }
-});
-
-recipeRoutes.get('/search', async (req: Request, res: Response, next) => {
-    try {
-        const search = req.query.name ? new RegExp(`${req.query.name}i`) : new RegExp('[a-zA-Z]');
-        const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
-        const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
-        const result = await RecipeModel.find({ name: search }, null, { skip: offset, limit: limit });
-
-        res.status(200)
-            .json(result)
-            .end();
-
-    } catch (e) {
-        res.status(404)
-            .send(`Recipe not found ${e}`)
-            .end();
-    }
-})
-
-
+  }
+);
 
 export default recipeRoutes;
