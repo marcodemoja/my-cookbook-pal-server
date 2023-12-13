@@ -4,6 +4,7 @@ import connection from "../db";
 const recipeIngredientSchema = new Schema({
     food_name: {
         type: String,
+        required: true,
     },
     serving_unit: {
         type: String
@@ -20,7 +21,7 @@ const recipeIngredientSchema = new Schema({
     _id: false
 });
 
-const RecipeSchema = new Schema({
+export const RecipeSchema = new Schema({
     name: {
         type: String,
         required: true,

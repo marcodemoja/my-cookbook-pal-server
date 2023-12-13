@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
-import { RecipeModel } from "../models/recipe";
+import { RecipeModel, RecipeSchema } from "../models/recipe";
 import { validateRequestMiddleware } from "../middlewares";
+import { FilterQuery } from "mongoose";
 const recipeRoutes = express.Router();
 
 recipeRoutes.post(
@@ -54,26 +55,23 @@ recipeRoutes.get(
 );
 
 recipeRoutes.get(
-  "/search/:searchTerm",
+  "/search/",
   validateRequestMiddleware("/recipe/search/:searchTerm"),
   async (req: Request, res: Response) => {
     try {
-      const { searchTerm } = req.params;
+      const { searchTerm } = req.query;
       const { offset, limit } = req.query;
-      const result = await RecipeModel.find(
-        { name: new RegExp(`${searchTerm}i`) },
-        null,
-        {
-          skip: parseInt(offset as string) || 0,
-          limit: parseInt(limit as string) || 20,
-        }
-      );
-
+      const search_query:FilterQuery<typeof RecipeSchema | {}> = searchTerm ? { name: new RegExp(`${searchTerm}i`) } : {};
+      const result = await RecipeModel.find(search_query)
+        .skip(parseInt(offset as string) || 0)
+        .limit(parseInt(limit as string) || 20);
       res.status(200).json(result);
     } catch (e) {
       res.status(404).send(`Recipe not found ${e}`);
     }
   }
 );
+
+
 
 export default recipeRoutes;
